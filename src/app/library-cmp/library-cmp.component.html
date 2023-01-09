@@ -1,0 +1,123 @@
+<div class="row my-4" [formGroup]="reactiveFormLibrary">
+  <button style="width: auto;margin: 3%;" pButton pRipple type="button"
+          class="col-md-3 my-4 btn p-button-secondary" (click)="showExistnum()"><span class="mx-auto">{{'CheckExistNumberOfBook' | translate }}</span></button>
+  <p-dialog header="{{'CheckExistNumberOfBook' | translate}}" [(visible)]="displayExistnum"  [style]="{width: '50vw'}">
+    <div>
+      <p-dropdown class="col-md-3 mt-4" [style]="{'width':'50%'}" [options]="BookList" formControlName="filterID" placeholder="{{'Select a Book' | translate}}" optionLabel="name" (onChange)="onSearchLead()" [showClear]="true"></p-dropdown>
+      <button pButton type="button" class="col-md-3 mx-5 mt-4 p-button-success"  (click)="checkExistBook()" label="{{'Search Book' | translate}}"></button>
+      <div class="row mt-5">
+        <h5 class="col-md-4" style="margin-left: 3%" *ngIf="tempShow">{{'Book Name' | translate}}:</h5>
+        <span class="col-md-4">{{reactiveFormLibrary.value['BookName']}}</span>
+      </div>
+      <div class="row my-3">
+        <h5 class="col-md-4" style="margin-left: 3%" *ngIf="tempShow">{{'Exist Number' | translate}}:</h5>
+        <span class="col-md-4">{{reactiveFormLibrary.value['existNum']}}</span>
+      </div>
+    </div>
+  </p-dialog>
+
+  <button style="width: auto;margin: 3%;" pButton pRipple type="button"
+          class="col-md-3 my-4 btn p-button-success" (click)="showAdd()"><span class="mx-auto">{{'AddBook' | translate }}</span></button>
+  <p-dialog header="{{'Add book to library' | translate}}:" [(visible)]="displayAdd"  [style]="{width: '50vw'}">
+    <div>
+      <p-dropdown class="col-md-3 mt-4" [style]="{'width':'50%'}" [options]="allBook" formControlName="BookId" placeholder="{{'Select a Book' | translate}}" optionLabel="name" (onChange)="onSearchLead()" [showClear]="true"></p-dropdown>
+      <button pButton type="button" class="col-md-3 mx-5 mt-4 p-button-success"  (click)="checkExistBook()" label="{{'Search Book' | translate}}"></button>
+      <h5 class="mx-1 mt-4" >{{'Exist Number' | translate}}:</h5>
+      <input class="col-md-6 mx-3" style="height: auto" type="text" pInputText formControlName="existNum">
+      <h5 class="mx-1 mt-4" >{{'Total Number' | translate }}:</h5>
+      <input class="col-md-6 mx-3" style="height: auto" type="text" pInputText formControlName="number">
+      <div class="row">
+        <h5 class="mx-1 mt-4 col-md-3" >{{'isBorrowable' | translate }}:</h5>
+        <p-checkbox class="col-md-2 mt-4" [binary]="true" formControlName="isBorrowAble"></p-checkbox>
+      </div>
+
+      <div class="row mt-5">
+        <p-button  class="d-flex align-items-center justify-content-center" icon="pi pi-check" [disabled]="reactiveFormLibrary.invalid" (click)="AddBook()" label="{{'Save' | translate }}"></p-button>
+      </div>
+
+    </div>
+  </p-dialog>
+
+
+</div>
+<hr>
+
+<div class="mx-5 mt-5">
+
+  <table class="table">
+    <thead>
+    <tr>
+      <th scope="col">{{'Id' | translate }}</th>
+      <th scope="col">{{'Name' | translate }}</th>
+      <th scope="col">{{'Category' | translate }}</th>
+      <th scope="col">{{'Exist Number' | translate }}</th>
+      <th scope="col">{{'Total Number' | translate }}</th>
+      <th scope="col">{{'isBorrowable' | translate }}</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr
+      *ngFor="
+          let lib of libraryModel
+            | paginate
+              : {
+                  itemsPerPage: 5,
+                  currentPage: pagination,
+                  totalItems: allLib
+                }
+        "
+    >
+      <td scope="row">{{ lib.id }}</td>
+      <td scope="row">{{ lib.book.name }}</td>
+      <td scope="row">{{ lib.book.category.name }}</td>
+      <td scope="row">{{ lib.existNum }}</td>
+      <td scope="row">{{ lib.number }}</td>
+      <td>
+        <i *ngIf="lib.isBorrowAble===true" class="col-md-2 mx-1 mt-2 pi pi-check" style="font-size: 1.5rem; color: green"></i>
+        <i *ngIf="lib.isBorrowAble===false" class="col-md-2 mx-1 mt-2 pi pi-times" style="font-size: 1.5rem; color: red"></i>
+      </td>
+<!--      <td><button style="height: 15px;width: auto;margin-left: 3%;" pButton pRipple type="button" label="Download" class="col-md-1 mt-2 btn p-button-warning" (click)="download(lib)"></button></td>-->
+    </tr>
+    </tbody>
+  </table>
+  <div class="d-flex justify-content-center">
+    <pagination-controls
+      (pageChange)="renderPage($event)"
+    ></pagination-controls>
+  </div>
+</div>
+<!--<div class="row mt-3 mx-2">-->
+<!--  <h5 class="col-md-2  mt-2"><span>Name</span></h5>-->
+<!--  <h5 class="col-md-2 mx-1 mt-2"><span>Category</span></h5>-->
+<!--  <h5 class="col-md-1  mt-2"><span>exist Number</span></h5>-->
+<!--  <h5 class="col-md-1  mt-2"><span>total Number</span></h5>-->
+<!--  <h5 class="col-md-2  mt-2"><span>is BorrowAble</span></h5>-->
+<!--</div>-->
+<!--<hr >-->
+<!--<div *ngFor="let lib of libraryModel">-->
+<!--  <div class="row mx-2">-->
+<!--    <p class="col-md-2 mt-2"><span>{{lib.book.name}}</span></p>-->
+<!--    <p class="col-md-2 mx-1 mt-2"><span>{{lib.book.category.name}}</span></p>-->
+<!--    <p class="col-md-1 mx-1 mt-2"><span>{{lib.existNum}}</span></p>-->
+<!--    <p class="col-md-1 mx-1 mt-2"><span>{{lib.number}}</span></p>-->
+<!--    <i *ngIf="lib.isBorrowAble===true" class="col-md-2 mx-1 mt-2 pi pi-check" style="font-size: 1.5rem; color: green"></i>-->
+<!--    <i *ngIf="lib.isBorrowAble===false" class="col-md-2 mx-1 mt-2 pi pi-times" style="font-size: 1.5rem; color: red"></i>-->
+<!--    <button style="height: 15px;width: auto;margin-left: 3%;" pButton pRipple type="button" label="Download" class="col-md-1 mt-2 btn p-button-warning" (click)="download(lib)"></button></div>-->
+<!--</div>-->
+<p-toast
+  position="top-right"
+  key="showError"
+>
+</p-toast>
+
+<!--<div *ngFor="let prod">-->
+<!--  <div class="row">-->
+<!--    <p class="col-md-1 mt-2"><span>{{prod.productId}}</span></p>-->
+<!--    <p class="col-md-2 mx-1 mt-2"><span>{{prod.productName}}</span></p>-->
+<!--    <p class="col-md-2  mt-2"><span>{{prod.categoryName}}</span></p>-->
+<!--    <button class="col-md-1 mt-2" style="height: 1%;width: auto;margin-left: 3%;" type="button" class="btn btn-primary" (click)="view(prod)">VIEW</button>-->
+<!--    <button class="col-md-1 mt-2" style="height: 1%;width: auto;margin-left: 3%;" type="button" class="btn btn-warning" (click)="update(prod)">UPDATE</button>-->
+<!--    <button class="col-md-1 mt-2" style="height: 1%;width: auto;margin-left: 3%;" type="button" class="btn btn-danger" (click)="delete(prod.productId)">delete</button>-->
+<!--  </div>-->
+<!--  <hr/>-->
+<!--</div>-->

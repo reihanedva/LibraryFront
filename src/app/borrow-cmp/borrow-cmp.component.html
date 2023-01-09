@@ -1,0 +1,346 @@
+<div [formGroup]="reactiveFormGroup">
+  <button style="width: auto;margin: 3%;" pButton pRipple type="button" label="{{'borrow' | translate }}"
+          class="col-md-1 my-4 btn p-button-secondary" (click)="showBasicDialog()"></button>
+  <p-dialog header="{{'borrow' | translate }}" [(visible)]="displayBasic"  [style]="{width: '50vw', height: '800px'}">
+    <div>
+      <h5 class="mx-1" >{{'user ID' | translate }}:</h5>
+      <div class="row">
+        <input id="userInput" class="col-md-6 mx-3" style="height: auto" type="text" pInputText formControlName="searchUser">
+        <p-button class="col-md-4" (click)="getPerson()" label="{{'search user' | translate }}" [disabled]="!reactiveFormGroup.value['searchUser']"></p-button>
+      </div>
+      <div *ngIf="reactiveFormGroup.get('searchUser')?.invalid &&
+        reactiveFormGroup.get('searchUser')?.errors &&
+        (reactiveFormGroup.get('searchUser')?.dirty || reactiveFormGroup.get('searchUser')?.touched)">
+        <small class="text-danger mx-2"
+               *ngIf="reactiveFormGroup.get('searchUser')?.hasError('required')">
+          {{'fieldRequired' | translate }}
+        </small>
+      </div>
+      <div class="row my-3" *ngIf="tempShow">
+        <h5 class="col-md-1" >name:</h5>
+        <input class="col-md-3 mx-3" type="text" formControlName="fullName" readonly style="border:0">
+        <h5 class="col-md-3" >{{'National Code' | translate }}:</h5>
+        <input class="col-md-3" type="text" formControlName="nationalCode" readonly style="border:0">
+<!--        <h5 class="col-md-8" style="color: red">User Not Found!</h5>-->
+      </div>
+      <h5 class="mx-1 mt-5" >{{'Select a Book' | translate }}:</h5>
+      <div class="row mb-3">
+        <p-dropdown (onChange)="selectBook($event.value)" [style]="{'width':'75%'}" [options]="allBook" formControlName="bookID" placeholder="{{'Select a Book' | translate }}" optionLabel="name" [showClear]="true"></p-dropdown>
+      </div>
+      <div *ngIf="reactiveFormGroup.get('bookID')?.invalid &&
+        reactiveFormGroup.get('bookID')?.errors &&
+        (reactiveFormGroup.get('bookID')?.dirty || reactiveFormGroup.get('bookID')?.touched)">
+        <small class="text-danger mx-2"
+               *ngIf="reactiveFormGroup.get('bookID')?.hasError('required')">
+          {{'fieldRequired' | translate }}
+        </small>
+      </div>
+<!--      <div class="row my-3" *ngIf="tempSelectBook">-->
+<!--        <h5 class="col-md-8" style="color: red">"{{errorBookName}}" is not Exist!</h5>-->
+<!--      </div>-->
+      <div class="row my-3" *ngIf="tempLownable">
+        <h5 class="col-md-8" style="color: red">"{{errorBookName}}" is not Borrowable!</h5>
+      </div>
+      <h5 class="mx-1 mt-5" >{{'Recive And Reject Date' | translate }}:</h5>
+      <div class="row mb-3">
+        <p-calendar dateFormat="mm-dd-yy" [style]="{'width':'75%'}" formControlName="rangeDates" placeholder=" {{'Select recive And reject Date' | translate }}" selectionMode="range" [touchUI]="true" [readonlyInput]="true" inputId="range"></p-calendar>
+      </div>
+      <div *ngIf="reactiveFormGroup.get('rangeDates')?.invalid &&
+        reactiveFormGroup.get('rangeDates')?.errors &&
+        (reactiveFormGroup.get('rangeDates')?.dirty || reactiveFormGroup.get('rangeDates')?.touched)">
+        <small class="text-danger mx-2"
+               *ngIf="reactiveFormGroup.get('rangeDates')?.hasError('required')">
+          {{'fieldRequired' | translate }}
+        </small>
+      </div>
+      <div class="row mt-5">
+        <p-button  class="d-flex align-items-center justify-content-center" icon="pi pi-check" [disabled]="reactiveFormGroup.invalid" (click)="borrowBook()" label="{{'Save' | translate }}"></p-button>
+      </div>
+    </div>
+  </p-dialog>
+
+  <div class="row my-4">
+    <h5 class="col-md-1 my-3" style="margin: 3%">{{'Search ID' | translate }}:</h5>
+    <input id="filterIDInput" class="col-md-2 mt-1" style="height: 10%" type="text" pInputText formControlName="filterID">
+    <button pButton type="button" class="col-md-2 mx-2 mt-1 p-button-success" style="width: 12%;height: 10%" (click)="showBookOfPerson()" label="{{'search user' | translate }}"></button>
+    <button pButton type="button" class="col-md-1 mx-2 mt-1 p-button-info" style="width: 7%;height: 10%" (click)="reset()" label="{{'Reset' | translate }}"></button>
+  </div>
+</div>
+
+<!--<hr>-->
+
+
+<div class="mx-5 mt-5">
+
+  <table class="table">
+
+    <thead>
+<!--    <tr>-->
+<!--      <th class="mx-auto">Person</th>-->
+<!--      <th class="mx-auto">Book</th>-->
+<!--      <th class="mx-auto">Date</th>-->
+<!--    </tr>-->
+    <tr>
+      <th scope="col">{{'Name' | translate }}</th>
+      <th scope="col">{{'National Code' | translate}}</th>
+      <th scope="col">{{'Book Name' | translate}}</th>
+      <th scope="col">{{'Category' | translate }}</th>
+      <th scope="col">{{'Receive Date' | translate }}</th>
+      <th scope="col">{{'Reject Date' | translate }}</th>
+      <th>{{'Return Book' | translate }}</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr
+      *ngFor="
+          let bor of BorrowModel
+            | paginate
+              : {
+                  itemsPerPage: 5,
+                  currentPage: pagination,
+                  totalItems: allBorrow
+                }
+        "
+    >
+      <td>{{bor.person.firstName}} {{bor.person.lastName}}</td>
+      <td>{{bor.person.nationalCode}}</td>
+      <td>{{bor.book.name}}</td>
+      <td>{{bor.book.category.name}}</td>
+      <td>{{GlobalFunction.convertDate(bor.receiveDate)}}</td>
+      <td>{{GlobalFunction.convertDate(bor.rejDate)}}</td>
+      <td><button style="height: 15px;width: auto;margin-left: 3%;" pButton pRipple type="button" label="{{'Return' | translate }}" class="col-md-1 mt-2 btn p-button-danger" (click)="return(bor.id)"></button></td>
+    </tr>
+    </tbody>
+  </table>
+  <div class="d-flex justify-content-center">
+    <pagination-controls
+      (pageChange)="renderPage($event)"
+    ></pagination-controls>
+  </div>
+</div>
+
+<p-toast
+  position="top-right"
+  key="showError"
+>
+</p-toast>
+
+
+<!--///////////////////////////////////////////////////////////////////////////////-->
+
+<!--<p-table [value]="BorrowModel" styleClass="p-datatable-gridlines" [tableStyle]="{'min-width': '50rem'}">-->
+<!--  <ng-template pTemplate="caption">-->
+<!--    <div class="row">-->
+<!--      <div class="col-md-3 d-flex align-items-center justify-content-center"  style="margin-left: 1.4%">-->
+<!--        <h5>Person</h5>-->
+<!--      </div>-->
+<!--      <p-divider class="col-md-1 " layout="vertical">-->
+<!--      </p-divider>-->
+<!--      <div class="col-md-2 d-flex align-items-center justify-content-center" style="margin-right: 2.2%">-->
+<!--        <h5>Book</h5>-->
+<!--      </div>-->
+<!--      <p-divider class="col-md-1" layout="vertical">-->
+<!--      </p-divider>-->
+<!--      <div class="col-md-3 d-flex align-items-center justify-content-center" style="margin-right: -3%">-->
+<!--        <h5>Date</h5>-->
+<!--      </div>-->
+<!--      <p-divider class="col-md-1" layout="vertical">-->
+<!--      </p-divider>-->
+<!--    </div>-->
+<!--  </ng-template>-->
+<!--  <ng-template pTemplate="header" >-->
+<!--    <tr>-->
+<!--      <th pSortableColumn="person.firstName">Name <p-sortIcon field="person.firstName"></p-sortIcon></th>-->
+<!--&lt;!&ndash;      <th>Name</th>&ndash;&gt;-->
+<!--&lt;!&ndash;      <th>National Code</th>&ndash;&gt;-->
+<!--      <th pSortableColumn="person.nationalCode">National Code <p-sortIcon field="person.nationalCode"></p-sortIcon></th>-->
+<!--      <th pSortableColumn="book.name">Book name <p-sortIcon field="book.name"></p-sortIcon></th>-->
+<!--      <th pSortableColumn="book.category.name">Category <p-sortIcon field="book.category.name"></p-sortIcon></th>-->
+<!--      <th pSortableColumn="receiveDate">Receive Date <p-sortIcon field="receiveDate"></p-sortIcon></th>-->
+<!--      <th pSortableColumn="rejDate">Reject Date <p-sortIcon field="rejDate"></p-sortIcon></th>-->
+<!--      <th>Return Book</th>-->
+<!--    </tr>-->
+<!--  </ng-template>-->
+<!--  <ng-template pTemplate="body" let-bor>-->
+<!--    <tr>-->
+<!--      <td>{{bor.person.firstName}} {{bor.person.lastName}}</td>-->
+<!--      <td>{{bor.person.nationalCode}}</td>-->
+<!--      <td>{{bor.book.name}}</td>-->
+<!--      <td>{{bor.book.category.name}}</td>-->
+<!--      <td>{{GlobalFunction.convertDate(bor.receiveDate)}}</td>-->
+<!--      <td>{{GlobalFunction.convertDate(bor.rejDate)}}</td>-->
+<!--      <td><button style="height: 15px;width: auto;margin-left: 3%;" pButton pRipple type="button" label="Return" class="col-md-1 mt-2 btn p-button-danger" (click)="return(bor.id)"></button></td>-->
+<!--    </tr>-->
+<!--  </ng-template>-->
+<!--</p-table>-->
+
+
+
+<!--<div class="row mt-4">-->
+<!--  <div class="col-md-4 d-flex align-items-center justify-content-center">-->
+<!--    <h5 style="color: indianred">person</h5>-->
+<!--  </div>-->
+<!--  <div class="col-md-4 d-flex align-items-center justify-content-center">-->
+<!--    <h5 style="color: indianred">Book</h5>-->
+<!--  </div>-->
+<!--  <div class="col-md-4 d-flex align-items-center justify-content-center">-->
+<!--    <h5 style="color: indianred">Date</h5>-->
+<!--  </div>-->
+<!--</div>-->
+
+<!--<div class="row mt-2">-->
+<!--  <div class="col-md-2 d-flex align-items-center justify-content-center">-->
+<!--    <h5 style="color: coral">Name</h5>-->
+<!--  </div>-->
+<!--  <div class="col-md-2 d-flex align-items-center justify-content-center">-->
+<!--    <h5 style="color: coral">National code</h5>-->
+<!--  </div>-->
+<!--  <div class="col-md-2 d-flex align-items-center justify-content-center">-->
+<!--    <h5 style="color: coral">Name</h5>-->
+<!--  </div>-->
+<!--  <div class="col-md-2 d-flex align-items-center justify-content-center">-->
+<!--    <h5 style="color: coral">category</h5>-->
+<!--  </div>-->
+<!--  <div class="col-md-2 d-flex align-items-center justify-content-center">-->
+<!--    <h5 style="color: coral">Receive Date</h5>-->
+<!--  </div>-->
+<!--  <div class="col-md-2 d-flex align-items-center justify-content-center">-->
+<!--    <h5 style="color: coral">Reject Date</h5>-->
+<!--  </div>-->
+<!--</div>-->
+<!--<hr>-->
+<!--<div class="row mt-2" *ngFor="let bor of BorrowModel">-->
+<!--  <div class="col-md-2 d-flex align-items-center justify-content-center">-->
+<!--    {{bor.person.firstName}} {{bor.person.lastName}}-->
+<!--  </div>-->
+<!--  <div class="col-md-2 d-flex align-items-center justify-content-center">-->
+<!--    {{bor.person.nationalCode}}-->
+<!--  </div>-->
+<!--  <div class="col-md-2 d-flex align-items-center justify-content-center">-->
+<!--    {{bor.book.name}}-->
+<!--  </div>-->
+
+<!--  <div class="col-md-2 d-flex align-items-center justify-content-center">-->
+<!--    {{bor.book.category.name}}-->
+<!--  </div>-->
+<!--  <div class="col-md-2 d-flex align-items-center justify-content-center">-->
+<!--    {{bor.receiveDate}}-->
+<!--  </div>-->
+<!--  <div class="col-md-2 d-flex align-items-center justify-content-center">-->
+<!--    {{bor.rejDate}}-->
+<!--  </div>-->
+<!--</div>-->
+
+
+<!--<div class="row mt-4" *ngFor="let bor of BorrowModel">-->
+<!--  <div class="col-md-4" >-->
+<!--    <div class="row" >-->
+<!--      <div class="col-md-2 mt-2"><h5 style="color: cornflowerblue">person</h5></div>-->
+<!--      <div class="col-md-10">-->
+<!--        <div class="row">-->
+<!--          <div class="col-md-6">-->
+<!--            Name:-->
+<!--          </div>-->
+<!--          <div class="col-md-6">-->
+<!--            {{bor.person.firstName}} {{bor.person.lastName}}-->
+<!--          </div>-->
+<!--        </div>-->
+<!--        <div class="row">-->
+<!--          <div class="col-md-6">-->
+<!--            national code:-->
+<!--          </div>-->
+<!--          <div class="col-md-6">-->
+<!--            {{bor.person.nationalCode}}-->
+<!--          </div>-->
+<!--        </div>-->
+<!--      </div>-->
+<!--    </div>-->
+
+<!--  </div>-->
+<!--  <div class="col-md-4">-->
+<!--    <div class="row" >-->
+<!--      <div class="col-md-2 mt-2">Book</div>-->
+<!--      <div class="col-md-10">-->
+<!--        <div class="row">-->
+<!--          <div class="col-md-6">-->
+<!--            Name:-->
+<!--          </div>-->
+<!--          <div class="col-md-6">-->
+<!--            {{bor.book.name}}-->
+<!--          </div>-->
+<!--        </div>-->
+<!--        <div class="row">-->
+<!--          <div class="col-md-6">-->
+<!--            Category:-->
+<!--          </div>-->
+<!--          <div class="col-md-6">-->
+<!--            {{bor.book.category.name}}-->
+<!--          </div>-->
+<!--        </div>-->
+<!--      </div>-->
+<!--    </div>-->
+<!--  </div>-->
+<!--  <div class="col-md-4">-->
+<!--    <div class="row" >-->
+<!--      <div class="col-md-2 mt-2">Date</div>-->
+<!--      <div class="col-md-10">-->
+<!--        <div class="row">-->
+<!--          <div class="col-md-6">-->
+<!--            Receive Date:-->
+<!--          </div>-->
+<!--          <div class="col-md-6">-->
+<!--            {{bor.receiveDate}}-->
+<!--          </div>-->
+<!--        </div>-->
+<!--        <div class="row">-->
+<!--          <div class="col-md-6">-->
+<!--            Reject Date:-->
+<!--          </div>-->
+<!--          <div class="col-md-6">-->
+<!--            {{bor.rejDate}}-->
+<!--          </div>-->
+<!--        </div>-->
+<!--      </div>-->
+<!--    </div>-->
+<!--  </div>-->
+<!--  <hr class="mt-4">-->
+<!--</div>-->
+
+
+<!--<div class="row mx-2 mt-3">-->
+<!--  <h5 class="col-md-2  mt-2"><span>Name</span></h5>-->
+<!--  <h5 class="col-md-2 mx-1 mt-2"><span>Shabak</span></h5>-->
+<!--  <h5 class="col-md-2  mt-2"><span>Print Data</span></h5>-->
+<!--  <h5 class="col-md-2 mx-1 mt-2"><span>Category</span></h5>-->
+
+<!--</div>-->
+<!--<div *ngFor="let book of bookList" class="mx-3">-->
+<!--  <div class="row">-->
+<!--    <p class="col-md-2 mt-2"><span>{{book.name}}</span></p>-->
+<!--    <p class="col-md-2 mx-1 mt-2"><span>{{book.shabak}}</span></p>-->
+<!--    <p class="col-md-2  mt-2"><span>{{book.printData}}</span></p>-->
+<!--    <p class="col-md-2 mx-1 mt-2"><span>{{book.category.name}}</span></p>-->
+<!--    <button style="height: 15px;width: auto;margin-left: 3%;" pButton pRipple type="button" label="Edit" class="col-md-1 mt-2 btn p-button-warning" (click)="showBasicDialog(book)"></button>-->
+<!--    <button style="height: 15px;width: auto;margin-left: 3%;" pButton pRipple type="button" label="Delete" class="col-md-1 mt-2 btn p-button-danger" (click)="delete(book.id)"></button>-->
+<!--    <p-dialog header="Update" [(visible)]="displayBasic" [style]="{width: '50vw'}">-->
+<!--      <div class="row">-->
+<!--        <h5 >Name</h5>-->
+<!--        <input type="text" pInputText [(ngModel)]="editBook.name">-->
+<!--        <h5 class="mt-4">Shabak</h5>-->
+<!--        <input type="text" pInputText [(ngModel)]="editBook.shabak">-->
+<!--      </div>-->
+<!--      <div class="row">-->
+<!--        &lt;!&ndash;        <input type="text" pInputText [(ngModel)]="editBook.printData">&ndash;&gt;-->
+<!--        <h5 class="mt-4">Category</h5>-->
+<!--        <p-dropdown [style]="{'width':'100%'}" [options]="categoryModelList" [(ngModel)]="editBook.category" placeholder="Select a Category" optionLabel="name" [showClear]="true"></p-dropdown>-->
+<!--        <h5 class="mt-4">Print Data</h5>-->
+<!--        <p-calendar  [(ngModel)]="editBook.printData" dateFormat="mm-dd-yy" [touchUI]="true" [readonlyInput]="true"></p-calendar>-->
+<!--      </div>-->
+
+<!--      <ng-template pTemplate="footer">-->
+<!--        <p-button icon="pi pi-check" (click)="update(editBook)" label="Ok" styleClass="p-button-text"></p-button>-->
+<!--      </ng-template>-->
+<!--    </p-dialog>-->
+<!--  </div>-->
+<!--  <hr/>-->
+<!--</div>-->

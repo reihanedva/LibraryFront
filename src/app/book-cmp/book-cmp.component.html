@@ -1,0 +1,176 @@
+<div [formGroup]="reactiveFormBook">
+  <button style="width: auto;margin-left: 3%;" pButton pRipple type="button" label="Add Book" class="col-md-1 my-4 btn p-button-secondary" (click)="showAddDialog()"></button>
+  <p-dialog header="Add Book" [(visible)]="displayAdd" [style]="{width: '50vw'}">
+    <div class="row">
+      <h5 class="mt-4">Name</h5>
+      <input type="text col-md-2" pInputText formControlName="bookName">
+      <div class="row mt-5">
+        <input class="col-md-5" type="file" accept="application/pdf" (change)="selectFilePDF($event)" />
+        <p-button class="col-md-3" [style]="{'height': '10px'}"  label="Add File" (click)="addFile()"></p-button>
+        <h5 *ngIf="fileS" class="col-md-8 mt-1" style="color: green">File uploaded seccessfully!</h5>
+        <h5 *ngIf="fileF" class="col-md-8 mt-1" style="color: red">Something wrong while uploading File!</h5>
+      </div>
+      <h5 class="mt-4">Shabak</h5>
+      <input type="text col-md-2" pInputText formControlName="shabak">
+    </div>
+    <div class="row">
+      <h5 class="mt-4">Print Data</h5>
+      <p-calendar  formControlName="printData" dateFormat="yy/mm/dd" [touchUI]="true" [readonlyInput]="true"></p-calendar>
+<!--      <input type="text col-md-2" pInputText [(ngModel)]="addBook.printData">-->
+      <h5 class="mt-4 col-md-2">Category</h5>
+      <p-dropdown [style]="{'width':'100%'}" [options]="categoryModelList" formControlName="category" placeholder="Select a Category" optionLabel="name" [showClear]="true"></p-dropdown>
+    </div>
+
+    <ng-template pTemplate="footer">
+      <p-button [disabled]="reactiveFormBook.invalid" icon="pi pi-check" (click)="addBookFunc()" label="Save" styleClass="p-button-text"></p-button>
+    </ng-template>
+  </p-dialog>
+</div>
+<hr >
+
+<div class="row my-2">
+  <div class="col-md-2 mx-3">
+   <h5 class="mt-2">Filter Books: </h5>
+  </div>
+  <div class="col-md-2">
+    <input class="" style="height: auto;margin-left: -55%" type="text" pInputText [(ngModel)]="filterString">
+  </div>
+</div>
+
+
+<div class="mx-5 mt-5">
+
+  <table class="table">
+    <thead>
+    <tr>
+      <th scope="col">Book's Cover</th>
+      <th scope="col">Name</th>
+      <th scope="col">Shabak</th>
+      <th scope="col">Print Date</th>
+      <th scope="col">Category</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr
+      *ngFor="
+          let book of bookList
+            | filterPipe : filterString : 'name'
+            | paginate
+              : {
+                  itemsPerPage: 5,
+                  currentPage: pagination,
+                  totalItems: allBooks
+                }
+        "
+    >
+      <td scope="row"><img class="col-md-2" style="height: auto;width: 100px;"  [src]="'data:image/png;base64,'+book.cover" /></td>
+      <td scope="row" class="col-md-2 ">{{ book.name }}</td>
+      <td scope="row" >{{ book.shabak }}</td>
+      <td scope="row" class="mx-3 ">{{ GlobalFunction.convertDate(book.printData) }}</td>
+      <td scope="row" class="col-md-2">{{ book.category.name }}</td>
+      <td><button style="height: 15px;width: auto;margin-left: 3%;" pButton pRipple type="button" label="Download" class="col-md-1 mt-2 btn p-button-info" (click)="download(book)"></button></td>
+      <td><button style="height: 25px;width: 120px;" pButton pRipple type="button" label="cover" class="col-md-4 mt-2 btn p-button-success" (click)="cover(book)"></button></td>
+<!--      <td><button style="height: 25px;width: 120px;" pButton pRipple type="button" label="file" class="col-md-4 mt-2 btn p-button-success" (click)="file(book)"></button></td>-->
+      <td><button style="height: 25px;width: auto;" pButton pRipple type="button" label="Edit" class="col-md-1 mt-2 btn p-button-warning" (click)="showBasicDialog(book)"></button></td>
+      <td><button style="height: 25px;width: auto;" pButton pRipple type="button" label="Delete" class="col-md-1 mt-2 btn p-button-danger" (click)="delete(book.id)"></button></td>
+    </tr>
+    </tbody>
+  </table>
+  <div class="d-flex justify-content-center">
+    <pagination-controls
+      (pageChange)="renderPage($event)"
+    ></pagination-controls>
+  </div>
+  <p-dialog header="Update" [(visible)]="displayBasic" [style]="{width: '50vw'}">
+    <div class="row">
+      <h5 >Name</h5>
+      <input type="text" pInputText [(ngModel)]="editBook.name">
+      <h5 class="mt-4">Shabak</h5>
+      <input type="text" pInputText [(ngModel)]="editBook.shabak">
+    </div>
+    <div class="row">
+      <!--        <input type="text" pInputText [(ngModel)]="editBook.printData">-->
+      <h5 class="mt-4">Print Data</h5>
+      <p-calendar  [(ngModel)]="editBook.printData" dateFormat="yy/mm/dd" [touchUI]="true" [readonlyInput]="true"></p-calendar>
+      <h5 class="mt-4">Category</h5>
+      <p-dropdown [style]="{'width':'100%'}" [options]="categoryModelList" [(ngModel)]="editBook.category" placeholder="Select a Category" optionLabel="name" [showClear]="true"></p-dropdown>
+    </div>
+
+    <ng-template pTemplate="footer">
+      <p-button icon="pi pi-check" (click)="update(editBook)" label="Save" styleClass="p-button-text"></p-button>
+    </ng-template>
+  </p-dialog>
+
+  <p-dialog header="Update Image" [(visible)]="displayImage" [style]="{width: '50vw'}">
+    <div class="row">
+      <div class="col-md-6">
+        <h5>Image:</h5>
+        <div class="col-md-5 mx-1">
+          <label class="btn btn-default p-0">
+            <input type="file" accept="image/*" (change)="selectFile($event)" />
+          </label>
+        </div>
+        <div class="col-md-6">
+          <img [src]="preview" class="preview" style="width: 150px;height: auto">
+        </div>
+      </div>
+      <div class="row d-flex align-items-center justify-content-center">
+        <button
+          class="btn btn-success col-md-2"
+          [disabled]="!selectedFiles"
+          (click)="uploadImage()"
+        >
+          Upload
+        </button>
+      </div>
+    </div>
+  </p-dialog>
+
+  <p-dialog header="Update File" [(visible)]="displayFile" [style]="{width: '50vw'}">
+    <div class="row">
+      <div class="col-md-6">
+        <h5>PDF:</h5>
+        <div class="col-md-5 mx-1">
+          <label class="btn btn-default p-0">
+            <input type="file" accept="application/pdf" (change)="selectFilePDF($event)" />
+          </label>
+        </div>
+      </div>
+      <div class="row d-flex align-items-center justify-content-center">
+        <button
+          class="btn btn-success col-md-2"
+          [disabled]="!selectedPDFFiles"
+          (click)="uploadFile()"
+        >
+          Upload
+        </button>
+      </div>
+    </div>
+
+
+
+    <!--      <div *ngIf="currentFile && progress" class="progress my-3">-->
+    <!--        <div-->
+    <!--          class="progress-bar progress-bar-info"-->
+    <!--          role="progressbar"-->
+    <!--          attr.aria-valuenow="{{ progress }}"-->
+    <!--          aria-valuemin="0"-->
+    <!--          aria-valuemax="100"-->
+    <!--          [ngStyle]="{ width: progress + '%' }"-->
+    <!--        >-->
+    <!--          {{ progress }}%-->
+    <!--        </div>-->
+    <!--      </div>-->
+
+    <div *ngIf="message" class="alert alert-secondary" role="alert">
+      {{ message }}
+    </div>
+  </p-dialog>
+</div>
+
+<p-toast
+  position="top-right"
+  key="showError"
+>
+</p-toast>
+

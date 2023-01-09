@@ -1,0 +1,75 @@
+
+
+<!--for fix this warning and also install prime ng I did this in my project-->
+
+<!--step1: update to you version in global cli in your device: your version = 15-->
+<!--ng update @angular/core@yourversion @angular/cli@yourversion-->
+
+<!--step2: for fix this error even happened, I use these codes:-->
+<!--Error: Repository is not clean. Please commit or stash any changes before updating.-->
+<!--ng update @angular/cli@yourversion @angular/core@yourversion &#45;&#45;allow-dirty or-->
+<!--ng update @angular/cli@yourversion @angular/core@yourversion &#45;&#45;allow-dirty &#45;&#45;force-->
+
+<!--step3: install prime ng-->
+<!--npm i primeng-->
+
+
+<!--<nav class="navbar navbar-expand-lg navbar-light mb-3" style="background-color: #215270;">-->
+
+<!--  <div>-->
+<!--    <ul class="navbar-nav">-->
+<!--      <li class="nav-item active">-->
+<!--        <a class="nav-link" routerLink="/"><h4 style="color:white;">Home</h4></a>-->
+<!--      </li>-->
+<!--      <li class="nav-item">-->
+<!--        <a class="nav-link" routerLink="/library"><h4 style="color:white;">Library</h4></a>-->
+<!--      </li>-->
+<!--      <li class="nav-item">-->
+<!--        <a class="nav-link" routerLink="/person"><h4 style="color:white;">Person</h4></a>-->
+<!--      </li>-->
+<!--    </ul>-->
+<!--  </div>-->
+<!--</nav>-->
+<!--<span class="form-inline" style="width: auto">-->
+<!--  <select-->
+<!--    class="form-control"-->
+<!--    #selectedLang-->
+<!--    (change)="switchLang(selectedLang.value)">-->
+<!--    <option *ngFor="let language of translate.getLangs()"-->
+<!--            [value]="language"-->
+<!--            [selected]="language === translate.currentLang">-->
+<!--      {{ language }}-->
+<!--    </option>-->
+<!--  </select>-->
+<!--</span>-->
+
+<!--<nav class="navbar navbar-dark bg-secondary">-->
+<!--  <div class="container">-->
+<!--    <p-tabMenu [model]="items">-->
+<!--    </p-tabMenu>-->
+<!--    <span class="form-inline">-->
+<!--      <select class="form-control" #selectedLang (change)="switchLang(selectedLang.value)">-->
+<!--        <option *ngFor="let language of translate.getLangs()" [value]="language"-->
+<!--                [selected]="language === translate.currentLang">-->
+<!--          {{ language }}-->
+<!--        </option>-->
+<!--      </select>-->
+<!--    </span>-->
+<!--  </div>-->
+<!--</nav>-->
+
+<div class="row">
+  <p-tabMenu [model]="items" class="col-md-11">
+  </p-tabMenu>
+  <span class="form-inline col-md-1 mt-3" style="margin: -1%;">
+      <select class="form-control" #selectedLang (change)="switchLang(selectedLang.value)">
+        <option *ngFor="let language of translate.getLangs()" [value]="language"
+                [selected]="language === translate.currentLang">
+          {{ language }}
+        </option>
+      </select>
+    </span>
+</div>
+
+<router-outlet></router-outlet>
+

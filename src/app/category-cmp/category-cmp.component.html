@@ -1,0 +1,39 @@
+
+<app-cat-dialog [showUpdate]="updateModel" (cancelBtn)="getCancelBtn()"></app-cat-dialog>
+<app-cat-list (updateCat)="getUpdateCate($event)" [reload]="tempReload"></app-cat-list>
+
+
+
+<!--<div>-->
+<!--  <button style="width: auto;margin-left: 3%;" pButton pRipple type="button" label="Add Person" class="col-md-1 my-4 btn p-button-warning" (click)="showAddDialog()"></button>-->
+<!--  <p-dialog header="Add Person" [(visible)]="displayAdd" [style]="{width: '50vw'}">-->
+<!--    <h5 class="mt-4">Category Name:</h5>-->
+<!--    <input type="text" pInputText [(ngModel)]="addCat.name">-->
+
+<!--    <ng-template pTemplate="footer">-->
+<!--      <p-button icon="pi pi-check" (click)="addCategory(addCat)" label="Save" styleClass="p-button-text"></p-button>-->
+<!--    </ng-template>-->
+<!--  </p-dialog>-->
+<!--</div>-->
+<!--<hr >-->
+
+<!--<div class="row mx-2 mt-3">-->
+<!--  <h5 class="col-md-1  mt-2"><span>Name</span></h5>-->
+
+<!--</div>-->
+<!--<div *ngFor="let cat of categoryList" class="mx-3">-->
+<!--  <div class="row">-->
+<!--    <p class="col-md-1 mt-2"><span>{{cat.name}}</span></p>-->
+<!--    &lt;!&ndash;    <button class="col-md-1 mt-2" style="height: 1%;width: auto;margin-left: 3%;" type="button" class="btn btn-primary" (click)="view(book)">VIEW</button>&ndash;&gt;-->
+<!--    &lt;!&ndash;    <button class="col-md-1 mt-2" style="height: 1%;width: auto;margin-left: 3%;" type="button" class="btn btn-warning" (click)="update(book)">UPDATE</button>&ndash;&gt;-->
+<!--    <button style="height: 15px;width: auto;margin-left: 3%;" pButton pRipple type="button" label="Edit" class="col-md-1 mt-2 btn p-button-warning" (click)="showBasicDialog(cat)"></button>-->
+<!--    <button style="height: 15px;width: auto;margin-left: 3%;" pButton pRipple type="button" label="Delete" class="col-md-1 mt-2 btn p-button-danger" (click)="delete(cat.id)"></button>-->
+<!--    <p-dialog header="Update" [(visible)]="displayBasic" [style]="{width: '50vw'}">-->
+<!--      <h5>Name</h5>-->
+<!--      <input type="text" pInputText [(ngModel)]="editCategory.name">-->
+<!--      <ng-template pTemplate="footer">-->
+<!--        <p-button icon="pi pi-check" (click)="updateCatFunc(editCategory)" label="Save" styleClass="p-button-text"></p-button>-->
+<!--      </ng-template>-->
+<!--    </p-dialog>-->
+<!--  </div>-->
+<!--</div>-->
