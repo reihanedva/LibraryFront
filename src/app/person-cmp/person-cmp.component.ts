@@ -62,7 +62,7 @@ export class PersonCMPComponent implements OnInit{
             detail: 'This Person cannot be deleted!',
           })
           // alert("This Person cannot be deleted!");
-          // console.log(error)
+          console.log(error)
         },
       }
     )
