@@ -19,7 +19,7 @@ export class AppComponent implements OnInit{
     this.items = [
       {label:  'Home', icon: 'pi pi-fw pi-home',routerLink:'/'},
       {label: 'Library', icon: 'pi pi-fw pi-clone ',routerLink:'library'},
-      {label: 'Borrow', icon: 'pi pi-fw pi-file-export',routerLink:'borrow'},
+      {label: 'borrow', icon: 'pi pi-fw pi-file-export',routerLink:'borrow'},
       {label: 'Person', icon: 'pi pi-fw pi-users',routerLink:'person'},
       {label: 'Book', icon: 'pi pi-fw pi-book',routerLink:'book'},
       {label: 'Category', icon: 'pi pi-fw pi-filter',routerLink:'category'},

@@ -1,5 +1,5 @@
 <div>
-  <button style="width: auto;margin-left: 3%;" pButton pRipple type="button" label="Add Category" class="col-md-1 my-4 btn p-button-secondary" (click)="showAddDialog()"></button>
+  <button style="width: auto;margin: 3%;" pButton pRipple type="button" label="{{'AddCategory' | translate }}" class="col-md-1 my-4 btn p-button-secondary" (click)="showAddDialog()"></button>
 </div>
 <hr >
 
@@ -45,8 +45,8 @@
   <table class="table">
     <thead>
     <tr>
-      <th scope="col">Id</th>
-      <th scope="col">Name</th>
+      <th scope="col">{{'Id' | translate }}</th>
+      <th scope="col">{{'Name' | translate }}</th>
     </tr>
     </thead>
     <tbody>
@@ -63,14 +63,16 @@
     >
       <td scope="row">{{ cat.id }}</td>
       <td scope="row">{{ cat.name }}</td>
-      <td><button style="height: 15px;width: auto;margin-left: 3%;" pButton pRipple type="button" label="Edit" class="col-md-1 mt-2 btn p-button-warning" (click)="showBasicDialog(cat)"></button></td>
-      <td><button style="height: 15px;width: auto;margin-left: 3%;" pButton pRipple type="button" label="Delete" class="col-md-1 mt-2 btn p-button-danger" (click)="delete(cat.id)"></button></td>
+      <td><button style="height: 15px;width: auto;margin-left: 3%;" pButton pRipple type="button" label="{{'Edit' | translate }}" class="col-md-1 mt-2 btn p-button-warning" (click)="showBasicDialog(cat)"></button></td>
+      <td><button style="height: 15px;width: auto;margin-left: 3%;" pButton pRipple type="button" label="{{'Delete' | translate }}" class="col-md-1 mt-2 btn p-button-danger" (click)="delete(cat.id)"></button></td>
     </tr>
     </tbody>
   </table>
   <div class="d-flex justify-content-center">
     <pagination-controls
       (pageChange)="renderPage($event)"
+      previousLabel="{{'Previous' | translate }}"
+      nextLabel="{{'Next' | translate }}"
     ></pagination-controls>
   </div>
 </div>

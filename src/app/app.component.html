@@ -60,12 +60,16 @@
 
 <div class="row">
   <p-tabMenu [model]="items" class="col-md-11">
+    <ng-template pTemplate="item" let-item let-i="index">
+      <i class="{{item.icon}}"></i>
+      {{item.label| translate}}
+    </ng-template>
   </p-tabMenu>
   <span class="form-inline col-md-1 mt-3" style="margin: -1%;">
       <select class="form-control" #selectedLang (change)="switchLang(selectedLang.value)">
         <option *ngFor="let language of translate.getLangs()" [value]="language"
                 [selected]="language === translate.currentLang">
-          {{ language }}
+          {{ language | translate }}
         </option>
       </select>
     </span>

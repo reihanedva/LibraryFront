@@ -1,44 +1,44 @@
 <div [formGroup]="reactiveFormPerson">
 <div>
-  <button style="width: auto;margin-left: 3%;" pButton pRipple type="button" label="Add Person" class="col-md-1 my-4 btn p-button-secondary" (click)="showAddDialog()"></button>
-  <p-dialog header="Add Person" [(visible)]="displayAdd" [style]="{width: '50vw'}">
+  <button style="width: auto;margin: 3%;" pButton pRipple type="button" label="{{'AddPerson' | translate }}" class="col-md-1 my-4 btn p-button-secondary" (click)="showAddDialog()"></button>
+  <p-dialog header="{{'AddPerson' | translate }}" [(visible)]="displayAdd" [style]="{width: '50vw'}">
 
-    <h5 class="mt-4">First Name</h5>
+    <h5 class="mt-4">{{'First Name' | translate }}</h5>
     <input type="text" pInputText formControlName="firstName">
     <div *ngIf="reactiveFormPerson.get('firstName')?.invalid &&
         reactiveFormPerson.get('firstName')?.errors &&
         (reactiveFormPerson.get('firstName')?.dirty || reactiveFormPerson.get('firstName')?.touched)">
       <small class="text-danger mx-2"
              *ngIf="reactiveFormPerson.get('firstName')?.hasError('required')">
-        This field is required.
+        {{'fieldRequired' | translate }}
       </small>
     </div>
 
-    <h5 class="mt-4">Last Name</h5>
+    <h5 class="mt-4">{{'Last Name' | translate }}</h5>
     <input type="text" pInputText formControlName="lastName">
     <div *ngIf="reactiveFormPerson.get('lastName')?.invalid &&
         reactiveFormPerson.get('lastName')?.errors &&
         (reactiveFormPerson.get('lastName')?.dirty || reactiveFormPerson.get('lastName')?.touched)">
       <small class="text-danger mx-2"
              *ngIf="reactiveFormPerson.get('lastName')?.hasError('required')">
-        This field is required.
+        {{'fieldRequired' | translate }}
       </small>
     </div>
 
 
-    <h5 class="mt-4">National Code</h5>
+    <h5 class="mt-4">{{'National Code' | translate }}</h5>
     <input type="text" pInputText formControlName="nationalCode" id="nationalCode">
     <div *ngIf="reactiveFormPerson.get('nationalCode')?.invalid &&
         reactiveFormPerson.get('nationalCode')?.errors &&
         (reactiveFormPerson.get('nationalCode')?.dirty || reactiveFormPerson.get('nationalCode')?.touched)">
       <small class="text-danger mx-2"
              *ngIf="reactiveFormPerson.get('nationalCode')?.hasError('required')">
-        This field is required.
+        {{'fieldRequired' | translate }}
       </small>
     </div>
 
     <ng-template pTemplate="footer">
-      <p-button icon="pi pi-check" (click)="addPersonFunc()" label="Save" styleClass="p-button-text" [disabled]="reactiveFormPerson.invalid"></p-button>
+      <p-button icon="pi pi-check" (click)="addPersonFunc()" label=" {{'Save' | translate }}" styleClass="p-button-text" [disabled]="reactiveFormPerson.invalid"></p-button>
     </ng-template>
   </p-dialog>
 </div>
@@ -46,10 +46,10 @@
 
 <div class="row my-2">
   <div class="col-md-2 mx-3">
-    <h5 class="mt-2">Filter Persons: </h5>
+    <h5 class="mt-2">{{'Filter Persons' | translate }}:</h5>
   </div>
-  <div class="col-md-2">
-    <input class="" style="height: auto;margin-left: -45%" type="text" pInputText formControlName="filterString">
+  <div class="col-md-2 my-2">
+    <input class="" style="height: auto;margin: -45%" type="text" pInputText formControlName="filterString">
   </div>
 </div>
 
@@ -58,8 +58,8 @@
     <table class="table">
       <thead>
       <tr>
-        <th scope="col">Name</th>
-        <th scope="col">National Code</th>
+        <th scope="col">{{'Name' | translate }}</th>
+        <th scope="col">{{'National Code' | translate }}</th>
       </tr>
       </thead>
       <tbody>
@@ -75,55 +75,57 @@
       >
         <td scope="row">{{person.fullName}}</td>
         <td scope="row">{{person.nationalCode}}</td>
-        <td><button style="height: 15px;width: auto;margin-left: 3%;" pButton pRipple type="button" label="Edit" class="col-md-1 mt-2 btn p-button-warning" (click)="showBasicDialog(person)"></button></td>
-        <td><button style="height: 15px;width: auto;margin-left: 3%;" pButton pRipple type="button" label="Delete" class="col-md-1 mt-2 btn p-button-danger" (click)="delete(person.id)"></button></td>
+        <td><button style="height: 15px;width: auto;margin-left: 3%;" pButton pRipple type="button" label="{{'Edit' | translate }}" class="col-md-1 mt-2 btn p-button-warning" (click)="showBasicDialog(person)"></button></td>
+        <td><button style="height: 15px;width: auto;margin-left: 3%;" pButton pRipple type="button" label="{{'Delete' | translate }}" class="col-md-1 mt-2 btn p-button-danger" (click)="delete(person.id)"></button></td>
       </tr>
       </tbody>
     </table>
     <div class="d-flex justify-content-center">
       <pagination-controls
         (pageChange)="renderPage($event)"
+        previousLabel="{{'Previous' | translate }}"
+        nextLabel="{{'Next' | translate }}"
       ></pagination-controls>
     </div>
   </div>
 
 
   <p-dialog header="Update" [(visible)]="displayBasic" [style]="{width: '50vw'}">
-    <h5 >first Name</h5>
+    <h5 >{{'First Name' | translate }}</h5>
     <input type="text" pInputText formControlName="firstName">
     <div *ngIf="reactiveFormPerson.get('firstName')?.invalid &&
       reactiveFormPerson.get('firstName')?.errors &&
       (reactiveFormPerson.get('firstName')?.dirty || reactiveFormPerson.get('firstName')?.touched)">
       <small class="text-danger mx-2"
              *ngIf="reactiveFormPerson.get('firstName')?.hasError('required')">
-        This field is required.
+        {{'fieldRequired' | translate }}
       </small>
     </div>
 
-    <h5 class="mt-4">first Name</h5>
+    <h5 class="mt-4">{{'Last Name' | translate }}</h5>
     <input type="text" pInputText formControlName="lastName">
     <div *ngIf="reactiveFormPerson.get('lastName')?.invalid &&
       reactiveFormPerson.get('lastName')?.errors &&
       (reactiveFormPerson.get('lastName')?.dirty || reactiveFormPerson.get('lastName')?.touched)">
       <small class="text-danger mx-2"
              *ngIf="reactiveFormPerson.get('lastName')?.hasError('required')">
-        This field is required.
+        {{'fieldRequired' | translate }}
       </small>
     </div>
 
-    <h5 class="mt-4">National Code</h5>
+    <h5 class="mt-4"> {{'National Code' | translate }}</h5>
     <input type="text" pInputText formControlName="nationalCode">
     <div *ngIf="reactiveFormPerson.get('nationalCode')?.invalid &&
       reactiveFormPerson.get('nationalCode')?.errors &&
       (reactiveFormPerson.get('nationalCode')?.dirty || reactiveFormPerson.get('nationalCode')?.touched)">
       <small class="text-danger mx-2"
              *ngIf="reactiveFormPerson.get('nationalCode')?.hasError('required')">
-        This field is required.
+        {{'fieldRequired' | translate }}
       </small>
     </div>
 
     <ng-template pTemplate="footer">
-      <p-button icon="pi pi-check" (click)="updatePersonFunc(editPerson)" label="Save" styleClass="p-button-text" ></p-button>
+      <p-button icon="pi pi-check" (click)="updatePersonFunc(editPerson)" label="{{'Save' | translate }}" styleClass="p-button-text" ></p-button>
     </ng-template>
   </p-dialog>
 </div>

@@ -1,28 +1,28 @@
 <div [formGroup]="reactiveFormBook">
-  <button style="width: auto;margin-left: 3%;" pButton pRipple type="button" label="Add Book" class="col-md-1 my-4 btn p-button-secondary" (click)="showAddDialog()"></button>
-  <p-dialog header="Add Book" [(visible)]="displayAdd" [style]="{width: '50vw'}">
+  <button style="width: auto;margin: 3%;" pButton pRipple type="button" label="{{'AddBook' | translate }}" class="col-md-1 my-4 btn p-button-secondary" (click)="showAddDialog()"></button>
+  <p-dialog header="{{'AddBook' | translate }}" [(visible)]="displayAdd" [style]="{width: '50vw'}">
     <div class="row">
-      <h5 class="mt-4">Name</h5>
+      <h5 class="mt-4">{{'Name' | translate }}</h5>
       <input type="text col-md-2" pInputText formControlName="bookName">
       <div class="row mt-5">
-        <input class="col-md-5" type="file" accept="application/pdf" (change)="selectFilePDF($event)" />
-        <p-button class="col-md-3" [style]="{'height': '10px'}"  label="Add File" (click)="addFile()"></p-button>
-        <h5 *ngIf="fileS" class="col-md-8 mt-1" style="color: green">File uploaded seccessfully!</h5>
-        <h5 *ngIf="fileF" class="col-md-8 mt-1" style="color: red">Something wrong while uploading File!</h5>
+        <input class="col-md-5" type="file" accept="application/pdf" #fileInput (change)="selectFilePDF($event)" />
+        <p-button class="col-md-5" [style]="{'height': '10px'}"  label="{{'AddFile' | translate }}" (click)="addFile()"></p-button>
+        <h5 *ngIf="fileS" class="col-md-8 mt-1" style="color: green">{{'FileUploadedSeccessfully' | translate }}</h5>
+        <h5 *ngIf="fileF" class="col-md-8 mt-1" style="color: red">{{'FileUploadedUnSeccessfully' | translate }}</h5>
       </div>
-      <h5 class="mt-4">Shabak</h5>
+      <h5 class="mt-4">{{'shabak' | translate }}</h5>
       <input type="text col-md-2" pInputText formControlName="shabak">
     </div>
     <div class="row">
-      <h5 class="mt-4">Print Data</h5>
+      <h5 class="mt-4">{{'Print Date' | translate }}</h5>
       <p-calendar  formControlName="printData" dateFormat="yy/mm/dd" [touchUI]="true" [readonlyInput]="true"></p-calendar>
-<!--      <input type="text col-md-2" pInputText [(ngModel)]="addBook.printData">-->
-      <h5 class="mt-4 col-md-2">Category</h5>
-      <p-dropdown [style]="{'width':'100%'}" [options]="categoryModelList" formControlName="category" placeholder="Select a Category" optionLabel="name" [showClear]="true"></p-dropdown>
+      <!--      <input type="text col-md-2" pInputText [(ngModel)]="addBook.printData">-->
+      <h5 class="mt-4 col-md-3">{{'Category' | translate }}</h5>
+      <p-dropdown [style]="{'width':'100%'}" [options]="categoryModelList" formControlName="category" placeholder="{{'Select a Category' | translate }}" optionLabel="name" [showClear]="true"></p-dropdown>
     </div>
 
     <ng-template pTemplate="footer">
-      <p-button [disabled]="reactiveFormBook.invalid" icon="pi pi-check" (click)="addBookFunc()" label="Save" styleClass="p-button-text"></p-button>
+      <p-button [disabled]="reactiveFormBook.invalid" icon="pi pi-check" (click)="fileInput.value=''" (click)="addBookFunc()" label="{{'Save' | translate }}" styleClass="p-button-text"></p-button>
     </ng-template>
   </p-dialog>
 </div>
@@ -30,7 +30,7 @@
 
 <div class="row my-2">
   <div class="col-md-2 mx-3">
-   <h5 class="mt-2">Filter Books: </h5>
+    <h5 class="mt-2">{{'Category' | translate }}:</h5>
   </div>
   <div class="col-md-2">
     <input class="" style="height: auto;margin-left: -55%" type="text" pInputText [(ngModel)]="filterString">
@@ -39,15 +39,14 @@
 
 
 <div class="mx-5 mt-5">
-
   <table class="table">
     <thead>
     <tr>
-      <th scope="col">Book's Cover</th>
-      <th scope="col">Name</th>
-      <th scope="col">Shabak</th>
-      <th scope="col">Print Date</th>
-      <th scope="col">Category</th>
+      <th scope="col">{{'Cover' | translate }}</th>
+      <th scope="col">{{'Name' | translate }}</th>
+      <th scope="col">{{'shabak' | translate }}</th>
+      <th scope="col">{{'Print Date' | translate }}</th>
+      <th scope="col">{{'Category' | translate }}</th>
     </tr>
     </thead>
     <tbody>
@@ -68,23 +67,31 @@
       <td scope="row" >{{ book.shabak }}</td>
       <td scope="row" class="mx-3 ">{{ GlobalFunction.convertDate(book.printData) }}</td>
       <td scope="row" class="col-md-2">{{ book.category.name }}</td>
-      <td><button style="height: 15px;width: auto;margin-left: 3%;" pButton pRipple type="button" label="Download" class="col-md-1 mt-2 btn p-button-info" (click)="download(book)"></button></td>
-      <td><button style="height: 25px;width: 120px;" pButton pRipple type="button" label="cover" class="col-md-4 mt-2 btn p-button-success" (click)="cover(book)"></button></td>
-<!--      <td><button style="height: 25px;width: 120px;" pButton pRipple type="button" label="file" class="col-md-4 mt-2 btn p-button-success" (click)="file(book)"></button></td>-->
-      <td><button style="height: 25px;width: auto;" pButton pRipple type="button" label="Edit" class="col-md-1 mt-2 btn p-button-warning" (click)="showBasicDialog(book)"></button></td>
-      <td><button style="height: 25px;width: auto;" pButton pRipple type="button" label="Delete" class="col-md-1 mt-2 btn p-button-danger" (click)="delete(book.id)"></button></td>
+      <td><button style="height: 15px;width: auto;margin-left: 3%;" pButton pRipple type="button" label="{{'Download' | translate }}" class="col-md-1 mt-2 btn p-button-info" (click)="download(book)"></button></td>
+      <td><button style="height: 25px;width: 120px;" pButton pRipple type="button" label="{{'cover' | translate }}" class="col-md-4 mt-2 btn p-button-success" (click)="cover(book)"></button></td>
+      <!--      <td><button style="height: 25px;width: 120px;" pButton pRipple type="button" label="file" class="col-md-4 mt-2 btn p-button-success" (click)="file(book)"></button></td>-->
+      <td><button style="height: 25px;width: auto;" pButton pRipple type="button" label="{{'Edit' | translate }}" class="col-md-1 mt-2 btn p-button-warning" (click)="showBasicDialog(book)"></button></td>
+      <td><button style="height: 25px;width: auto;" pButton pRipple type="button" label="{{'Delete' | translate }}" class="col-md-1 mt-2 btn p-button-danger" (click)="delete(book.id)"></button></td>
     </tr>
     </tbody>
   </table>
   <div class="d-flex justify-content-center">
     <pagination-controls
       (pageChange)="renderPage($event)"
+      previousLabel="{{'Previous' | translate }}"
+      nextLabel="{{'Next' | translate }}"
     ></pagination-controls>
   </div>
   <p-dialog header="Update" [(visible)]="displayBasic" [style]="{width: '50vw'}">
     <div class="row">
       <h5 >Name</h5>
       <input type="text" pInputText [(ngModel)]="editBook.name">
+      <div class="row mt-5">
+        <input class="col-md-5" type="file" #fileInputUpdate accept="application/pdf" (change)="selectFilePDF($event)" />
+        <p-button class="col-md-3" [style]="{'height': '10px'}"  label="Update File" (click)="addFile()"></p-button>
+        <h5 *ngIf="fileS" class="col-md-8 mt-1" style="color: green">File uploaded seccessfully!</h5>
+        <h5 *ngIf="fileF" class="col-md-8 mt-1" style="color: red">Something wrong while uploading File!</h5>
+      </div>
       <h5 class="mt-4">Shabak</h5>
       <input type="text" pInputText [(ngModel)]="editBook.shabak">
     </div>
@@ -97,7 +104,7 @@
     </div>
 
     <ng-template pTemplate="footer">
-      <p-button icon="pi pi-check" (click)="update(editBook)" label="Save" styleClass="p-button-text"></p-button>
+      <p-button icon="pi pi-check" (click)="fileInputUpdate.value=''" (click)="update(editBook)" label="Save" styleClass="p-button-text"></p-button>
     </ng-template>
   </p-dialog>
 

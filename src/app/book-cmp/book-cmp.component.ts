@@ -83,6 +83,11 @@ export class BookCMPComponent {
     if(book.printData.length){
       book.printData = this.tempData
     }
+    console.log(this.reactiveFormBook.value)
+    if(this.reactiveFormBook.value['addFileId'] !== null){
+      book.fileBook.id = this.reactiveFormBook.value['addFileId']
+      console.log('ss')
+    }
     this.bookService.updateBook(book).subscribe(
       {
         next: (response) => {
@@ -107,7 +112,7 @@ export class BookCMPComponent {
         },
       }
 
-     )
+    )
   }
 
   delete(bookID : number){
@@ -129,6 +134,8 @@ export class BookCMPComponent {
 
   showBasicDialog(book :BookModel) {
     console.log('befor',book)
+    this.fileS = false
+    this.fileF = false
     this.categoryService.getCategory().subscribe((data)=>{
       this.categoryModelList = data
     })
@@ -168,11 +175,13 @@ export class BookCMPComponent {
           alert("Something wrong while Adding this book!");
         },
       }
-      )
+    )
   }
 
   showAddDialog() {
     this.displayAdd = true
+    this.fileS = false
+    this.fileF = false
     this.categoryService.getCategory().subscribe((data)=>{
       this.categoryModelList = data
     })
@@ -257,44 +266,44 @@ export class BookCMPComponent {
 
       if (filePDF)
         this.currentPDFFile = filePDF
-        // temp[0] = this.currentPDFFile
-        this.fileService.upload(this.currentPDFFile).subscribe(
-          {
-            next: (data) => {
-              console.log('response', data)
-              this.fileService.getAllFile().subscribe((data)=>{
-                for(let i = 0; i<data.length; i++){
-                  if(data[i].name  == this.currentPDFFile!.name){
-                    this.setPic.fileBook.id = data[i].id
-                  }
+      // temp[0] = this.currentPDFFile
+      this.fileService.upload(this.currentPDFFile).subscribe(
+        {
+          next: (data) => {
+            console.log('response', data)
+            this.fileService.getAllFile().subscribe((data)=>{
+              for(let i = 0; i<data.length; i++){
+                if(data[i].name  == this.currentPDFFile!.name){
+                  this.setPic.fileBook.id = data[i].id
                 }
-                this.bookService.updateBook(this.setPic).subscribe((data)=>{
-                  this.setPic = new BookModel()
-                })
+              }
+              this.bookService.updateBook(this.setPic).subscribe((data)=>{
+                this.setPic = new BookModel()
               })
+            })
 
-              this.fetchBooks()
-              this.messageService.add({
-                key:'showError',
-                severity: 'success',
-                summary: 'Uploaded',
-                detail: 'Upload files Successfully!',
-              })
-              this.displayFile = false
-            },
-            error: (error) => {
-              this.messageService.add({
-                key:'showError',
-                severity: 'error',
-                summary: 'ERORR',
-                detail: 'Something wrong while uploading files!',
-              })
-              this.displayFile = false
-            },
-          })
-      }
-      this.selectedPDFFiles = undefined
+            this.fetchBooks()
+            this.messageService.add({
+              key:'showError',
+              severity: 'success',
+              summary: 'Uploaded',
+              detail: 'Upload files Successfully!',
+            })
+            this.displayFile = false
+          },
+          error: (error) => {
+            this.messageService.add({
+              key:'showError',
+              severity: 'error',
+              summary: 'ERORR',
+              detail: 'Something wrong while uploading files!',
+            })
+            this.displayFile = false
+          },
+        })
     }
+    this.selectedPDFFiles = undefined
+  }
 
   cover(book : BookModel){
     this.displayImage = true
@@ -371,44 +380,44 @@ export class BookCMPComponent {
   // }
 
   uploadImage() {
-      console.log(this.selectedFiles)
-      let temp = []
+    console.log(this.selectedFiles)
+    let temp = []
 
-      if (this.selectedFiles) {
-        const file: File | null = this.selectedFiles.item(0);
+    if (this.selectedFiles) {
+      const file: File | null = this.selectedFiles.item(0);
 
-        if (file) {
-          this.currentFile = file;
-          this.bookService.uploadCover(this.currentFile, this.setPic.id).subscribe(
-            {
-              next: (data) => {
-                console.log(data)
-                this.fetchBooks()
-                // alert("Add success");
-                this.setPic = new BookModel()
-                this.messageService.add({
-                  key:'showError',
-                  severity: 'success',
-                  summary: 'Uploaded',
-                  detail: 'Upload files Successfully!',
-                })
-                this.displayImage = false
-              },
-              error: (error) => {
-                this.setPic = new BookModel()
-                this.messageService.add({
-                  key:'showError',
-                  severity: 'error',
-                  summary: 'ERORR',
-                  detail: 'Something wrong while uploading files!',
-                })
-                this.displayImage = false
-                // alert("Something wrong while Adding this person!");
-              },
-            })
-        }
-        this.selectedFiles = undefined
+      if (file) {
+        this.currentFile = file;
+        this.bookService.uploadCover(this.currentFile, this.setPic.id).subscribe(
+          {
+            next: (data) => {
+              console.log(data)
+              this.fetchBooks()
+              // alert("Add success");
+              this.setPic = new BookModel()
+              this.messageService.add({
+                key:'showError',
+                severity: 'success',
+                summary: 'Uploaded',
+                detail: 'Upload files Successfully!',
+              })
+              this.displayImage = false
+            },
+            error: (error) => {
+              this.setPic = new BookModel()
+              this.messageService.add({
+                key:'showError',
+                severity: 'error',
+                summary: 'ERORR',
+                detail: 'Something wrong while uploading files!',
+              })
+              this.displayImage = false
+              // alert("Something wrong while Adding this person!");
+            },
+          })
       }
+      this.selectedFiles = undefined
+    }
   }
 
   addFile() {

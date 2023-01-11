@@ -43,7 +43,6 @@
 <hr>
 
 <div class="mx-5 mt-5">
-
   <table class="table">
     <thead>
     <tr>
@@ -83,6 +82,8 @@
   <div class="d-flex justify-content-center">
     <pagination-controls
       (pageChange)="renderPage($event)"
+      previousLabel="{{'Previous' | translate }}"
+      nextLabel="{{'Next' | translate }}"
     ></pagination-controls>
   </div>
 </div>
